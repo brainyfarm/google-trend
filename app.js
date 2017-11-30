@@ -25,9 +25,18 @@ app.get('/trendcsv/', (req, res) => {
         keyword,
         startTime,
     }).then((data) => {
-        let timelineResponse = JSON.parse(data);        
-        if(timelineResponse.default.timelineData.length == 0) {
-            return res.json({})
+        let timelineResponse = JSON.parse(data);
+        if (timelineResponse.default.timelineData.length == 0) {
+            // Generate empty CSV
+            const emptyData = [{
+                date: null,
+                value: null
+            }]
+            return csvBuilder(emptyData, ["date", "value"], keyword, 'error').then((response) => {
+                return res.download(`csv/${keyword}-error.csv`, `${keyword}-error.csv`);
+            }).catch((err) => {
+                // Catch this error
+            })
         }
         const frame = getTimeFrame(timelineResponse.default.timelineData[0].formattedTime)
 
@@ -53,8 +62,8 @@ app.get('/trendjson/', (req, res) => {
         startTime,
     }).then((data) => {
         let timelineResponse = JSON.parse(data);
-        
-        if(timelineResponse.default.timelineData.length == 0) {
+
+        if (timelineResponse.default.timelineData.length == 0) {
             return res.json({
             })
         }
