@@ -25,7 +25,10 @@ app.get('/trendcsv/', (req, res) => {
         keyword,
         startTime,
     }).then((data) => {
-        let timelineResponse = JSON.parse(data);
+        let timelineResponse = JSON.parse(data);        
+        if(timelineResponse.default.timelineData.length == 0) {
+            return res.json({})
+        }
         const frame = getTimeFrame(timelineResponse.default.timelineData[0].formattedTime)
 
         responseRebuilder(timelineResponse.default.timelineData).then((finalData) => {
@@ -50,6 +53,11 @@ app.get('/trendjson/', (req, res) => {
         startTime,
     }).then((data) => {
         let timelineResponse = JSON.parse(data);
+        
+        if(timelineResponse.default.timelineData.length == 0) {
+            return res.json({
+            })
+        }
         const frame = getTimeFrame(timelineResponse.default.timelineData[0].formattedTime)
 
         responseRebuilder(timelineResponse.default.timelineData).then((finalData) => {
