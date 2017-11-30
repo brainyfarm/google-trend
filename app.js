@@ -23,7 +23,6 @@ app.get('/trendcsv/', (req, res) => {
     const differenceInDateMonth = moment(currentDate).diff(moment(startTime), 'months');
     return googleTrends.interestOverTime({
         keyword,
-        geo: 'US',
         startTime,
     }).then((data) => {
         let timelineResponse = JSON.parse(data);
@@ -41,14 +40,13 @@ app.get('/trendcsv/', (req, res) => {
 
 app.get('/trendjson/', (req, res) => {
     const keyword = req.query.keyword;
-    const geo = req.query.geo || 'US';
+    const geo = req.query.geo;
     const currentDate = new Date(Date.now());
     const startTime = req.query.start_date ? new Date(req.query.start_date) : new Date('2004-01-01');
     const differenceInDate = moment(currentDate).diff(moment(startTime), 'days');
     const differenceInDateMonth = moment(currentDate).diff(moment(startTime), 'months');
     return googleTrends.interestOverTime({
         keyword,
-        geo,
         startTime,
     }).then((data) => {
         let timelineResponse = JSON.parse(data);
